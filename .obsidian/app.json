@@ -1,0 +1,8 @@
+{
+  "attachmentFolderPath": "./attachments",
+  "defaultViewMode": "preview",
+  "readableLineLength": true,
+  "alwaysUpdateLinks": true,
+  "showLineNumber": false,
+  "showRibbon": true
+}
