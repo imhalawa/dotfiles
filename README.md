@@ -61,7 +61,9 @@ Machine-local secrets and overrides go in `~/.zshrc.local` — sourced last, nev
 | atuin | `brew install atuin` — owns `Ctrl+R`; Up arrow stays prefix history search |
 | zoxide | `brew install zoxide` — aliases `cd` to `z` |
 | direnv | `brew install direnv` |
-| eza | `brew install eza` — `ls`/`ll`/`la`/`tree` fall back to plain `ls` if absent |
+| eza | `brew install eza` — `ls`/`ll`/`la`/`tree`/`lg`/`lt` fall back to plain `ls` if absent |
+| bat | `brew install bat` — `cat`/`catn`, man pages, fzf preview; theme `GitHub` |
+| fd | `brew install fd` — backs `ff` and fzf's file search |
 
 Every block above is guarded by a `command -v` / readable-path check, so the shell still starts with any of them missing.
 

@@ -567,3 +567,32 @@ export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# =====================================================================
+# bat / fd / eza — icons, git state, syntax colors
+# =====================================================================
+
+if command -v bat >/dev/null 2>&1; then
+  export BAT_THEME="GitHub"
+  alias cat='bat --style=plain --paging=never'
+  alias catn='bat --style=numbers,changes --paging=never'
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+if command -v fd >/dev/null 2>&1; then
+  # replaces the find-based ff() defined earlier
+  ff() { fd --hidden --follow "$1"; }
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+
+if command -v eza >/dev/null 2>&1; then
+  alias lg='eza -lah --icons --git --group-directories-first'
+  alias lt='eza --tree --level=2 --icons --git-ignore'
+  alias ltt='eza --tree --level=3 --icons --git-ignore'
+fi
+
+if command -v fzf >/dev/null 2>&1 && command -v bat >/dev/null 2>&1; then
+  export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :200 {}'"
+  export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
+fi
