@@ -1,0 +1,32 @@
+# paper-like reading setup — cmux (live config; cmux writes its own keys here)
+
+theme = Selenized Light
+
+# greyish paper, keep Selenized's muted ANSI
+# alts: warmer #FBF9F3, grey #F9F9F8
+background = #FDFCF8
+foreground = #2E3E44
+window-theme = light
+
+# alts: RecMonoCasual / RecMonoLinear / RecMonoDuotone / AtkynsonMono Nerd Font Mono
+font-family = RecMonoSmCasual Nerd Font Mono
+font-size = 15
+font-thicken = true
+font-feature = -calt,-liga,-dlig
+adjust-cell-height = 22%
+
+# never dim text: faint/unfocused defaults wash out ink on cream
+faint-opacity = 1
+unfocused-split-opacity = 1
+
+window-padding-x = 18
+window-padding-y = 14
+window-padding-balance = true
+split-divider-color = #D6D1C8
+
+cursor-style = block
+cursor-style-blink = false
+mouse-hide-while-typing = true
+
+# cmux-only key (ignored by the bundled ghostty CLI)
+surface-tab-bar-font-size = 15
