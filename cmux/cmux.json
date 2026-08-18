@@ -9,5 +9,7 @@
   },
   "sidebarAppearance": {
     "matchTerminalBackground": true
-  }
+  },
+  "paneBorderColor": "#B4AEA2",
+  "activePaneBorderColor": "#8A8478"
 }
