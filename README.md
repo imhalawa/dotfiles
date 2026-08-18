@@ -8,6 +8,8 @@ cmux/cmux.json        cmux app chrome (appearance, sidebar)
 zsh/.zshrc            shell config
 zsh/.zprofile         login-shell PATH entries
 zsh/.p10k.zsh         Powerlevel10k prompt config
+.obsidian/            Obsidian vault config (see below)
+tmux.conf             tmux config
 ```
 
 ## Install
@@ -75,3 +77,11 @@ Two gotchas worth remembering:
 
 - Ghostty rejects a line with a trailing `# comment` after the value — the whole setting is silently dropped and the theme default wins. Comments go on their own line.
 - `faint-opacity = 1` and `unfocused-split-opacity = 1` stop dim/washed-out text on a light background.
+
+## Obsidian
+
+![image](https://github.com/user-attachments/assets/02712a67-245e-4eb3-a885-f0b02543b393)
+
+- IBM Plex font (Sans, Serif & Mono) is required.
+- Stacked tabs might not be enabled by default — press `ctrl+p` and select `Toggle Stacked Tabs`.
+- Further colorscheme adjustments are derived from the Goodreads color scheme.
