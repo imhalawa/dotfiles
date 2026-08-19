@@ -596,3 +596,13 @@ if command -v fzf >/dev/null 2>&1 && command -v bat >/dev/null 2>&1; then
   export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :200 {}'"
   export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
 fi
+
+# Flip the current pane between the high-contrast black palette and the cream
+# paper palette: `paper` / `paper off`
+paper() {
+  case "${1:-on}" in
+    off|black|dark) bash "$HOME/.claude/hooks/paper-theme.sh" set ;;
+    reset)          bash "$HOME/.claude/hooks/paper-theme.sh" reset ;;
+    *)              bash "$HOME/.claude/hooks/paper-theme.sh" paper ;;
+  esac
+}

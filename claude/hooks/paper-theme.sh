@@ -1,9 +1,12 @@
 #!/bin/bash
-# Applies the paper palette to the current terminal pane only, via OSC escapes.
-# Claude Code runs this on SessionStart ("set") and SessionEnd ("reset"),
-# so other panes keep the terminal's own theme.
+# Paints the current terminal pane via OSC escapes — one pane only, so other
+# panes keep the terminal's own colors.
 #
-# Colors follow the system appearance: Selenized Light (paper) / Selenized Dark.
+#   set    high-contrast black (Claude Code SessionStart)
+#   paper  cream paper palette, for reading long output
+#   reset  hand the pane back to the terminal theme (SessionEnd)
+#
+# The `paper` shell function in ~/.zshrc wraps this: `paper` / `paper off`.
 
 # Resolve a terminal to paint: the controlling tty, else the tty owning the
 # parent process (Claude Code spawns hooks without a controlling terminal).
@@ -29,30 +32,19 @@ case "${1:-set}" in
     osc "104"; osc "110"; osc "111"; osc "112"
     exit 0
     ;;
+  paper)
+    bg='#FDFCF8'; fg='#2E3E44'; cursor='#0072D4'
+    # Selenized Light. Bright slots (8-15) are dark ink, so they stay readable
+    # on cream even when an app assumes a dark background.
+    p=('#ECE3CC' '#D2212D' '#489100' '#AD8900' '#0072D4' '#CA4898' '#009C8F' '#909995'
+       '#D5CDB6' '#CC1729' '#428B00' '#A78300' '#006DCE' '#C44392' '#00978A' '#3A4D53')
+    ;;
+  *)
+    bg='#000000'; fg='#F2F2F2'; cursor='#FFFFFF'
+    p=('#5C6370' '#FF6B60' '#7FE787' '#FFD866' '#6FB6FF' '#FF8AD8' '#5BE7DA' '#E6E6E6'
+       '#7A8290' '#FF8B80' '#A2F5A8' '#FFE28A' '#9CCDFF' '#FFA9E4' '#86F2E8' '#FFFFFF')
+    ;;
 esac
-
-if [ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" = "Dark" ]; then
-  bg='#0F3841'; fg='#C3D2D2'; cursor='#4695F7'
-  p=('#184956' '#FA5750' '#75B938' '#DBB32D' '#4695F7' '#F275BE' '#41C7B9' '#72898F'
-     '#2D5B69' '#FF665C' '#84C747' '#EBC13D' '#58A3FF' '#FF84CD' '#53D6C7' '#CAD8D9')
-  claude_theme=dark-ansi
-else
-  bg='#FDFCF8'; fg='#2E3E44'; cursor='#0072D4'
-  p=('#ECE3CC' '#D2212D' '#489100' '#AD8900' '#0072D4' '#CA4898' '#009C8F' '#909995'
-     '#D5CDB6' '#CC1729' '#428B00' '#A78300' '#006DCE' '#C44392' '#00978A' '#3A4D53')
-  claude_theme=light-ansi
-fi
 
 for i in "${!p[@]}"; do osc "4;${i};${p[$i]}"; done
 osc "10;${fg}"; osc "11;${bg}"; osc "12;${cursor}"
-
-# Claude picks its own theme at startup, so a mode flip lands on the next session.
-settings="$HOME/.claude/settings.json"
-python3 - "$settings" "$claude_theme" <<'PY' 2>/dev/null
-import json,sys
-p,want=sys.argv[1],sys.argv[2]
-s=json.load(open(p))
-if s.get("theme")!=want:
-    s["theme"]=want
-    json.dump(s,open(p,"w"),indent=2)
-PY

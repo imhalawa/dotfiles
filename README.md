@@ -72,11 +72,19 @@ Every block above is guarded by a `command -v` / readable-path check, so the she
 
 `gh`, `kubectl`, `dotnet`, `node` + `npm`, `bun`, `pyenv`, `jq`, `rg`, `docker`, `nvm`, `sdkman`.
 
-## Claude-only paper palette
+## Pane palettes
 
-The terminal itself runs **Selenized Dark** (`theme` in `cmux/config.ghostty`, cmux app appearance `dark`). The paper palette is applied **only to panes running Claude Code**, by `claude/hooks/paper-theme.sh` writing OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor) straight to the pane's tty — and undone with `104`/`110`/`111`/`112` when the session ends.
+The terminal runs **high-contrast black** — `#F2F2F2` on `#000000`, a hand-set bright ANSI palette, and `minimum-contrast = 4.5` as a floor so no app can print unreadably dim text. Selenized Dark's own colors are tuned for `#103C48` and go muddy on pure black, hence the hand-set palette.
 
-Register it in `~/.claude/settings.json`:
+`claude/hooks/paper-theme.sh` paints **one pane** with OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor; `104`/`110`/`111`/`112` to undo):
+
+| Command | Result |
+|---|---|
+| `paper` | cream `#FDFCF8` with `#2E3E44` ink, Selenized Light palette — for reading long output |
+| `paper off` | back to high-contrast black |
+| `paper reset` | drop the override, inherit the terminal theme |
+
+Claude Code runs `set` (black) on `SessionStart` and `reset` on `SessionEnd`, via `~/.claude/settings.json`:
 
 ```json
 {
@@ -91,7 +99,7 @@ Register it in `~/.claude/settings.json`:
 }
 ```
 
-Light mode gives creamy-white `#FDFCF8` with `#2E3E44` ink; dark mode gives Selenized Dark deepened to `#0F3841`. The script also writes `theme: light-ansi` / `dark-ansi` into `~/.claude/settings.json` so Claude's own colors match — that part lands on the next session, since Claude reads its theme at startup.
+Claude's own theme is `dark-ansi`. In paper mode the bright ANSI slots (8-15) are dark ink colors, so `dark-ansi` output stays readable on cream without a restart.
 
 Font, cell height and padding stay global in `cmux/config.ghostty`: no escape sequence can scope those to one pane.
 
