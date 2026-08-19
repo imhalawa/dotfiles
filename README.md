@@ -1,11 +1,9 @@
 # dotfiles
 
-macOS (Apple Silicon). **cmux runs stock apart from the font** — no theme, padding or chrome overrides; font family and size are global because no mechanism scopes them to one pane. All color customization is scoped to Claude Code panes and applied at runtime. Plus a zsh profile built around fzf, atuin, zoxide and Powerlevel10k, and an Obsidian vault config.
+macOS (Apple Silicon). **cmux runs stock apart from the font** — no theme, padding or chrome overrides; font family and size are global because no mechanism scopes them to one pane. Claude Code colors live in [claude-themes](https://github.com/imhalawa/claude-themes). Plus a zsh profile built around fzf, atuin, zoxide and Powerlevel10k, and an Obsidian vault config.
 
 ```
-claude/hooks/         Claude Code hooks — per-pane background
-claude/themes/        Claude Code custom theme (paper-mode)
-cmux/config.ghostty   intentionally empty — cmux runs on its defaults
+cmux/config.ghostty   font family and size only — everything else stock
 cmux/cmux.json        cmux defaults, untouched
 zsh/.zshrc            shell config
 zsh/.zprofile         login-shell PATH entries
@@ -23,57 +21,33 @@ git clone git@github.com:imhalawa/dotfiles.git ~/dotfiles
 ln -sf ~/dotfiles/zsh/.zshrc    ~/.zshrc
 ln -sf ~/dotfiles/zsh/.zprofile ~/.zprofile
 ln -sf ~/dotfiles/zsh/.p10k.zsh ~/.p10k.zsh
-
-# claude
-mkdir -p ~/.claude/hooks
-ln -sf ~/dotfiles/claude/hooks/paper-theme.sh ~/.claude/hooks/paper-theme.sh
 ```
 
-Machine-local secrets and overrides go in `~/.zshrc.local` — sourced last, never committed (gitignored). `~/.claude/settings.json` is deliberately not in this repo; only the hook wiring below is.
+Machine-local secrets and overrides go in `~/.zshrc.local` — sourced last, never committed (gitignored).
 
 ## Claude theme
 
-`claude/themes/paper-mode.json` is a Claude Code **custom theme** — supported since ~2.1.x: drop `<slug>.json` in `~/.claude/themes/`, shaped `{ "name", "base", "overrides" }`, where `overrides` maps theme tokens to `rgb(r,g,b)` strings. Claude watches that directory, so edits apply without a restart. Select it with `/theme`, or `"theme": "custom:paper-mode"` in `~/.claude/settings.json`.
-
-It inherits `base: light` and repaints 36 tokens onto warm paper ink: `#2E3E44` text, Selenized accents (blue `#0072D4` permissions, magenta `#CA4898` bash/skills, green `#428B00` success, red `#CC1729` error), cream message and diff backgrounds.
+Extracted to **[imhalawa/claude-themes](https://github.com/imhalawa/claude-themes)** — the
+paper-mode theme, its OSC pane painter, its hook wiring and its shell wrapper now
+live there as one installable folder.
 
 ```sh
-ln -sf ~/dotfiles/claude/themes/paper-mode.json ~/.claude/themes/paper-mode.json
+git clone git@github.com:imhalawa/claude-themes.git ~/claude-themes
+~/claude-themes/install.sh install paper-mode
 ```
 
-The theme cannot set the terminal's own background — that's the hook below.
+That copies the theme and hook into `~/.claude`, merges the hook entries into
+`settings.json` and selects the theme. `~/.claude/settings.json` is deliberately
+not in this repo — the installer is what wires it.
 
-## Claude pane background
+The `paper` / `paper off` / `paper reset` shell function is in `zsh/.zshrc` here,
+and mirrored as `themes/paper-mode/shell.zsh` there.
 
-`claude/hooks/paper-theme.sh` paints **one pane** with OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor; `104`/`110`/`111`/`112` to undo). Other panes, and the terminal itself, are untouched.
-
-| Command | Result |
-|---|---|
-| `paper` | cream `#FDFCF8`, `#2E3E44` ink, Selenized Light palette — the default |
-| `paper off` | high-contrast black: `#F2F2F2` on `#000000`, bright ANSI palette |
-| `paper reset` | drop the override, inherit the terminal's own colors |
-
-Claude Code runs `set` (paper) on `SessionStart` and `reset` on `SessionEnd`. Wire it in `~/.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      { "hooks": [{ "type": "command", "command": "bash \"$HOME/.claude/hooks/paper-theme.sh\" set", "timeout": 5 }] }
-    ],
-    "SessionEnd": [
-      { "hooks": [{ "type": "command", "command": "bash \"$HOME/.claude/hooks/paper-theme.sh\" reset", "timeout": 5 }] }
-    ]
-  }
-}
-```
-
-The script resolves the pane's tty through `/dev/tty`, falling back to the parent process's tty — needed because Claude spawns hooks without a controlling terminal.
-
-With `custom:paper-mode` selected, Claude's own colors come from the theme file rather than the ANSI palette, so the hook's job narrows to the background, foreground and cursor. `paper off` therefore gives a black background with paper ink until you switch theme — fine for a glance, not for hours.
-
-**Colors only.** Font family, font size, cell height and padding have no escape sequence, Claude Code has no font setting of its own, and cmux exposes no per-pane font — so the font is set globally in `cmux/config.ghostty` (`RecMonoSmCasual Nerd Font Mono`, 15pt). Per-workspace font *size* can still be nudged by hand with cmux's `increaseWorkspaceTerminalFontSize` / `decreaseWorkspaceTerminalFontSize` shortcuts.
-
+**Font is separate.** Font family, size, cell height and padding have no escape
+sequence, Claude Code has no font setting, and cmux exposes no per-pane font — so
+the font is global in `cmux/config.ghostty` (`RecMonoSmCasual Nerd Font Mono`,
+16pt). Per-workspace font *size* can be nudged with cmux's
+`increaseWorkspaceTerminalFontSize` / `decreaseWorkspaceTerminalFontSize`.
 ## Dependencies
 
 ### Shell — required
