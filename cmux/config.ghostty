@@ -1,3 +1,10 @@
-# Intentionally empty: cmux runs on its defaults.
-# All customization is Claude-only, applied per pane by
-# ~/.claude/hooks/paper-theme.sh via OSC escapes.
+# cmux runs stock apart from the font: font family and size cannot be scoped
+# to a single pane, so they have to be global.
+# Colors stay per-pane — see ~/.claude/hooks/paper-theme.sh and
+# ~/.claude/themes/paper-mode.json.
+#
+# WARNING: `cmux themes set` rewrites this whole file.
+
+# alts: RecMonoCasual / RecMonoLinear / RecMonoDuotone / AtkynsonMono Nerd Font Mono
+font-family = RecMonoSmCasual Nerd Font Mono
+font-size = 15

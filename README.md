@@ -1,6 +1,6 @@
 # dotfiles
 
-macOS (Apple Silicon). **cmux runs stock** — no theme, font, padding or chrome overrides. All terminal customization is scoped to Claude Code panes and applied at runtime. Plus a zsh profile built around fzf, atuin, zoxide and Powerlevel10k, and an Obsidian vault config.
+macOS (Apple Silicon). **cmux runs stock apart from the font** — no theme, padding or chrome overrides; font family and size are global because no mechanism scopes them to one pane. All color customization is scoped to Claude Code panes and applied at runtime. Plus a zsh profile built around fzf, atuin, zoxide and Powerlevel10k, and an Obsidian vault config.
 
 ```
 claude/hooks/         Claude Code hooks — per-pane background
@@ -72,7 +72,7 @@ The script resolves the pane's tty through `/dev/tty`, falling back to the paren
 
 With `custom:paper-mode` selected, Claude's own colors come from the theme file rather than the ANSI palette, so the hook's job narrows to the background, foreground and cursor. `paper off` therefore gives a black background with paper ink until you switch theme — fine for a glance, not for hours.
 
-**Colors only.** Font family, font size, cell height and padding have no escape sequence, and cmux exposes no per-pane font setting — a Claude pane uses whatever font cmux is running. Per-workspace font *size* can be nudged by hand with cmux's `increaseWorkspaceTerminalFontSize` / `decreaseWorkspaceTerminalFontSize` shortcuts.
+**Colors only.** Font family, font size, cell height and padding have no escape sequence, Claude Code has no font setting of its own, and cmux exposes no per-pane font — so the font is set globally in `cmux/config.ghostty` (`RecMonoSmCasual Nerd Font Mono`, 15pt). Per-workspace font *size* can still be nudged by hand with cmux's `increaseWorkspaceTerminalFontSize` / `decreaseWorkspaceTerminalFontSize` shortcuts.
 
 ## Dependencies
 
