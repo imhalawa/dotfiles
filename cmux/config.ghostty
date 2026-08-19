@@ -9,6 +9,8 @@
 # Terminal default for non-Claude panes. Claude panes are repainted by
 # ~/.claude/hooks/paper-theme.sh regardless of this.
 theme = Selenized Dark
+background = #000000
+foreground = #CAD8D9
 
 # alts: RecMonoCasual / RecMonoLinear / RecMonoDuotone / AtkynsonMono Nerd Font Mono
 font-family = RecMonoSmCasual Nerd Font Mono
