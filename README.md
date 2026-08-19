@@ -3,7 +3,8 @@
 macOS (Apple Silicon). **cmux runs stock** — no theme, font, padding or chrome overrides. All terminal customization is scoped to Claude Code panes and applied at runtime. Plus a zsh profile built around fzf, atuin, zoxide and Powerlevel10k, and an Obsidian vault config.
 
 ```
-claude/hooks/         Claude Code hooks — per-pane palette
+claude/hooks/         Claude Code hooks — per-pane background
+claude/themes/        Claude Code custom theme (paper-mode)
 cmux/config.ghostty   intentionally empty — cmux runs on its defaults
 cmux/cmux.json        cmux defaults, untouched
 zsh/.zshrc            shell config
@@ -30,7 +31,19 @@ ln -sf ~/dotfiles/claude/hooks/paper-theme.sh ~/.claude/hooks/paper-theme.sh
 
 Machine-local secrets and overrides go in `~/.zshrc.local` — sourced last, never committed (gitignored). `~/.claude/settings.json` is deliberately not in this repo; only the hook wiring below is.
 
-## Claude pane palettes
+## Claude theme
+
+`claude/themes/paper-mode.json` is a Claude Code **custom theme** — supported since ~2.1.x: drop `<slug>.json` in `~/.claude/themes/`, shaped `{ "name", "base", "overrides" }`, where `overrides` maps theme tokens to `rgb(r,g,b)` strings. Claude watches that directory, so edits apply without a restart. Select it with `/theme`, or `"theme": "custom:paper-mode"` in `~/.claude/settings.json`.
+
+It inherits `base: light` and repaints 36 tokens onto warm paper ink: `#2E3E44` text, Selenized accents (blue `#0072D4` permissions, magenta `#CA4898` bash/skills, green `#428B00` success, red `#CC1729` error), cream message and diff backgrounds.
+
+```sh
+ln -sf ~/dotfiles/claude/themes/paper-mode.json ~/.claude/themes/paper-mode.json
+```
+
+The theme cannot set the terminal's own background — that's the hook below.
+
+## Claude pane background
 
 `claude/hooks/paper-theme.sh` paints **one pane** with OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor; `104`/`110`/`111`/`112` to undo). Other panes, and the terminal itself, are untouched.
 
@@ -57,7 +70,7 @@ Claude Code runs `set` (paper) on `SessionStart` and `reset` on `SessionEnd`. Wi
 
 The script resolves the pane's tty through `/dev/tty`, falling back to the parent process's tty — needed because Claude spawns hooks without a controlling terminal.
 
-Claude's own theme is `light-ansi`, matching the paper default — `*-ansi` themes make Claude draw with the 16 palette slots, which is what makes repainting them work at all. Claude reads its theme once at startup, so `paper off` gives you a black background with light-mode ink until the next session; fine for a glance, not for hours.
+With `custom:paper-mode` selected, Claude's own colors come from the theme file rather than the ANSI palette, so the hook's job narrows to the background, foreground and cursor. `paper off` therefore gives a black background with paper ink until you switch theme — fine for a glance, not for hours.
 
 **Colors only.** Font family, font size, cell height and padding have no escape sequence, and cmux exposes no per-pane font setting — a Claude pane uses whatever font cmux is running. Per-workspace font *size* can be nudged by hand with cmux's `increaseWorkspaceTerminalFontSize` / `decreaseWorkspaceTerminalFontSize` shortcuts.
 
