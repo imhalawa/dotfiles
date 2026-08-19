@@ -36,11 +36,11 @@ Machine-local secrets and overrides go in `~/.zshrc.local` — sourced last, nev
 
 | Command | Result |
 |---|---|
-| `paper` | cream `#FDFCF8`, `#2E3E44` ink, Selenized Light palette — for reading long output |
+| `paper` | cream `#FDFCF8`, `#2E3E44` ink, Selenized Light palette — the default |
 | `paper off` | high-contrast black: `#F2F2F2` on `#000000`, bright ANSI palette |
 | `paper reset` | drop the override, inherit the terminal's own colors |
 
-Claude Code runs `set` (black) on `SessionStart` and `reset` on `SessionEnd`. Wire it in `~/.claude/settings.json`:
+Claude Code runs `set` (paper) on `SessionStart` and `reset` on `SessionEnd`. Wire it in `~/.claude/settings.json`:
 
 ```json
 {
@@ -57,7 +57,7 @@ Claude Code runs `set` (black) on `SessionStart` and `reset` on `SessionEnd`. Wi
 
 The script resolves the pane's tty through `/dev/tty`, falling back to the parent process's tty — needed because Claude spawns hooks without a controlling terminal.
 
-Claude's own theme is `dark-ansi`. In paper mode the bright ANSI slots (8-15) hold dark ink colors, so `dark-ansi` output stays readable on cream without restarting the session.
+Claude's own theme is `light-ansi`, matching the paper default — `*-ansi` themes make Claude draw with the 16 palette slots, which is what makes repainting them work at all. Claude reads its theme once at startup, so `paper off` gives you a black background with light-mode ink until the next session; fine for a glance, not for hours.
 
 **Colors only.** Font family, font size, cell height and padding have no escape sequence, and cmux exposes no per-pane font setting — a Claude pane uses whatever font cmux is running. Per-workspace font *size* can be nudged by hand with cmux's `increaseWorkspaceTerminalFontSize` / `decreaseWorkspaceTerminalFontSize` shortcuts.
 

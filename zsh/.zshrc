@@ -601,8 +601,8 @@ fi
 # paper palette: `paper` / `paper off`
 paper() {
   case "${1:-on}" in
-    off|black|dark) bash "$HOME/.claude/hooks/paper-theme.sh" set ;;
+    off|black|dark) bash "$HOME/.claude/hooks/paper-theme.sh" black ;;
     reset)          bash "$HOME/.claude/hooks/paper-theme.sh" reset ;;
-    *)              bash "$HOME/.claude/hooks/paper-theme.sh" paper ;;
+    *)              bash "$HOME/.claude/hooks/paper-theme.sh" set ;;
   esac
 }
