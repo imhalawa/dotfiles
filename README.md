@@ -74,7 +74,7 @@ Every block above is guarded by a `command -v` / readable-path check, so the she
 
 ## Claude-only paper palette
 
-The terminal itself keeps cmux's default theme, which follows the system light/dark mode. The paper palette is applied **only to panes running Claude Code**, by `claude/hooks/paper-theme.sh` writing OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor) straight to the pane's tty — and undone with `104`/`110`/`111`/`112` when the session ends.
+The terminal itself runs **Selenized Dark** (`theme` in `cmux/config.ghostty`, cmux app appearance `dark`). The paper palette is applied **only to panes running Claude Code**, by `claude/hooks/paper-theme.sh` writing OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor) straight to the pane's tty — and undone with `104`/`110`/`111`/`112` when the session ends.
 
 Register it in `~/.claude/settings.json`:
 

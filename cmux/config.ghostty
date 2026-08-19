@@ -6,6 +6,10 @@
 # WARNING: `cmux themes set` rewrites this whole file. Re-apply from
 # ~/dotfiles/cmux/config.ghostty if that happens.
 
+# Terminal default for non-Claude panes. Claude panes are repainted by
+# ~/.claude/hooks/paper-theme.sh regardless of this.
+theme = Selenized Dark
+
 # alts: RecMonoCasual / RecMonoLinear / RecMonoDuotone / AtkynsonMono Nerd Font Mono
 font-family = RecMonoSmCasual Nerd Font Mono
 font-size = 15
