@@ -3,9 +3,9 @@
 macOS (Apple Silicon) setup: **cmux** terminal tuned for paper-like reading, and a **zsh** profile built around fzf, atuin, zoxide and Powerlevel10k.
 
 ```
-cmux/config.ghostty   terminal typography (cmux's live Ghostty config)
+cmux/config.ghostty   intentionally empty — cmux runs stock
 claude/hooks/         Claude Code hooks — paper palette, per pane
-cmux/cmux.json        cmux app chrome (appearance, sidebar)
+cmux/cmux.json        cmux defaults, untouched
 zsh/.zshrc            shell config
 zsh/.zprofile         login-shell PATH entries
 zsh/.p10k.zsh         Powerlevel10k prompt config
@@ -72,6 +72,40 @@ Every block above is guarded by a `command -v` / readable-path check, so the she
 
 `gh`, `kubectl`, `dotnet`, `node` + `npm`, `bun`, `pyenv`, `jq`, `rg`, `docker`, `nvm`, `sdkman`.
 
+## Dependencies
+
+### Terminal
+
+| Dependency | Install | Notes |
+|---|---|---|
+| cmux | https://cmux.com | bundles Ghostty 1.3.x; verified on 0.64.22 |
+| RecMonoSmCasual Nerd Font | `brew install --cask font-recursive-mono-nerd-font` | active terminal font |
+| AtkynsonMono Nerd Font | `brew install --cask font-atkynson-mono-nerd-font` | alternative, Atkinson Hyperlegible shapes |
+
+### Shell — required
+
+| Dependency | Install |
+|---|---|
+| Homebrew | https://brew.sh |
+| powerlevel10k | `brew install powerlevel10k` |
+| zsh-autosuggestions | `brew install zsh-autosuggestions` |
+| zsh-syntax-highlighting | `brew install zsh-syntax-highlighting` |
+| zsh-completions | `brew install zsh-completions` |
+| fzf | `brew install fzf` |
+| fzf-tab | `git clone https://github.com/Aloxaf/fzf-tab ~/.zsh/fzf-tab` |
+| atuin | `brew install atuin` — owns `Ctrl+R`; Up arrow stays prefix history search |
+| zoxide | `brew install zoxide` — aliases `cd` to `z` |
+| direnv | `brew install direnv` |
+| eza | `brew install eza` — `ls`/`ll`/`la`/`tree`/`lg`/`lt` fall back to plain `ls` if absent |
+| bat | `brew install bat` — `cat`/`catn`, man pages, fzf preview; theme `GitHub` |
+| fd | `brew install fd` — backs `ff` and fzf's file search |
+
+Every block above is guarded by a `command -v` / readable-path check, so the shell still starts with any of them missing.
+
+### Shell — optional, only powers matching aliases and completions
+
+`gh`, `kubectl`, `dotnet`, `node` + `npm`, `bun`, `pyenv`, `jq`, `rg`, `docker`, `nvm`, `sdkman`.
+
 ## Pane palettes
 
 The terminal runs **high-contrast black** — `#F2F2F2` on `#000000`, a hand-set bright ANSI palette, and `minimum-contrast = 4.5` as a floor so no app can print unreadably dim text. Selenized Dark's own colors are tuned for `#103C48` and go muddy on pure black, hence the hand-set palette.
@@ -103,16 +137,11 @@ Claude's own theme is `dark-ansi`. In paper mode the bright ANSI slots (8-15) ar
 
 Font, cell height and padding stay global in `cmux/config.ghostty`: no escape sequence can scope those to one pane.
 
-## Terminal appearance
+## Gotchas
 
-Colors live in the Claude hook (above), not in `cmux/config.ghostty`. Alternates worth trying for the light background: `#FBF9F3` warmer, `#F9F9F8` neutral grey.
-
-Three gotchas worth remembering:
-
-- **`cmux themes set` rewrites `config.ghostty` wholesale**, dropping every hand-written setting. Re-apply this repo's copy afterwards.
-
+- **`cmux themes set` rewrites `config.ghostty` wholesale**, dropping every hand-written key.
 - Ghostty rejects a line with a trailing `# comment` after the value — the whole setting is silently dropped and the theme default wins. Comments go on their own line.
-- `faint-opacity = 1` and `unfocused-split-opacity = 1` stop dim/washed-out text on a light background.
+- `faint-opacity = 1` and `unfocused-split-opacity = 1` stop dim/washed-out text on a light background, if you ever do set global config.
 
 ## Obsidian
 

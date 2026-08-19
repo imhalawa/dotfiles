@@ -3,19 +3,5 @@
   "customSidebars": {
     "renderer": "inProcess"
   },
-  "schemaVersion": 1,
-  "app": {
-    "appearance": "dark"
-  },
-  "sidebarAppearance": {
-    "matchTerminalBackground": true
-  },
-  "paneBorderColor": "#B4AEA2",
-  "activePaneBorderColor": null,
-  "terminal": {
-    "showScrollBar": false
-  },
-  "workspaceColors": {
-    "indicatorStyle": "washRail"
-  }
+  "schemaVersion": 1
 }
