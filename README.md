@@ -3,7 +3,8 @@
 macOS (Apple Silicon) setup: **cmux** terminal tuned for paper-like reading, and a **zsh** profile built around fzf, atuin, zoxide and Powerlevel10k.
 
 ```
-cmux/config.ghostty   terminal appearance (cmux's live Ghostty config)
+cmux/config.ghostty   terminal typography (cmux's live Ghostty config)
+claude/hooks/         Claude Code hooks — paper palette, per pane
 cmux/cmux.json        cmux app chrome (appearance, sidebar)
 zsh/.zshrc            shell config
 zsh/.zprofile         login-shell PATH entries
@@ -71,11 +72,36 @@ Every block above is guarded by a `command -v` / readable-path check, so the she
 
 `gh`, `kubectl`, `dotnet`, `node` + `npm`, `bun`, `pyenv`, `jq`, `rg`, `docker`, `nvm`, `sdkman`.
 
+## Claude-only paper palette
+
+The terminal itself keeps cmux's default theme, which follows the system light/dark mode. The paper palette is applied **only to panes running Claude Code**, by `claude/hooks/paper-theme.sh` writing OSC escapes (`4;N` palette, `10` fg, `11` bg, `12` cursor) straight to the pane's tty — and undone with `104`/`110`/`111`/`112` when the session ends.
+
+Register it in `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [{ "type": "command", "command": "bash \"$HOME/.claude/hooks/paper-theme.sh\" set", "timeout": 5 }] }
+    ],
+    "SessionEnd": [
+      { "hooks": [{ "type": "command", "command": "bash \"$HOME/.claude/hooks/paper-theme.sh\" reset", "timeout": 5 }] }
+    ]
+  }
+}
+```
+
+Light mode gives creamy-white `#FDFCF8` with `#2E3E44` ink; dark mode gives Selenized Dark deepened to `#0F3841`. The script also writes `theme: light-ansi` / `dark-ansi` into `~/.claude/settings.json` so Claude's own colors match — that part lands on the next session, since Claude reads its theme at startup.
+
+Font, cell height and padding stay global in `cmux/config.ghostty`: no escape sequence can scope those to one pane.
+
 ## Terminal appearance
 
-Selenized Light palette with the background overridden to `#FDFCF8` (creamy white) and ink darkened to `#2E3E44` (~9:1 contrast). Alternates are kept as comments in `cmux/config.ghostty`: `#FBF9F3` warmer, `#F9F9F8` neutral grey.
+Colors live in the Claude hook (above), not in `cmux/config.ghostty`. Alternates worth trying for the light background: `#FBF9F3` warmer, `#F9F9F8` neutral grey.
 
-Two gotchas worth remembering:
+Three gotchas worth remembering:
+
+- **`cmux themes set` rewrites `config.ghostty` wholesale**, dropping every hand-written setting. Re-apply this repo's copy afterwards.
 
 - Ghostty rejects a line with a trailing `# comment` after the value — the whole setting is silently dropped and the theme default wins. Comments go on their own line.
 - `faint-opacity = 1` and `unfocused-split-opacity = 1` stop dim/washed-out text on a light background.

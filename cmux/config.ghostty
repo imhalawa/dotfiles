@@ -1,12 +1,10 @@
-# paper-like reading setup — cmux (live config; cmux writes its own keys here)
-
-theme = Selenized Light
-
-# greyish paper, keep Selenized's muted ANSI
-# alts: warmer #FBF9F3, grey #F9F9F8
-background = #FDFCF8
-foreground = #2E3E44
-window-theme = light
+# cmux terminal — typography and layout only.
+# Colors are NOT set here: Claude Code paints its own pane via
+# ~/.claude/hooks/paper-theme.sh (OSC escapes). Other panes keep cmux's
+# default theme, which follows the system light/dark mode.
+#
+# WARNING: `cmux themes set` rewrites this whole file. Re-apply from
+# ~/dotfiles/cmux/config.ghostty if that happens.
 
 # alts: RecMonoCasual / RecMonoLinear / RecMonoDuotone / AtkynsonMono Nerd Font Mono
 font-family = RecMonoSmCasual Nerd Font Mono
@@ -15,14 +13,13 @@ font-thicken = true
 font-feature = -calt,-liga,-dlig
 adjust-cell-height = 22%
 
-# never dim text: faint/unfocused defaults wash out ink on cream
+# never dim text
 faint-opacity = 1
 unfocused-split-opacity = 1
 
 window-padding-x = 10
 window-padding-y = 8
 window-padding-balance = true
-split-divider-color = #B4AEA2
 
 cursor-style = block
 cursor-style-blink = false
